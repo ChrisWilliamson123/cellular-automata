@@ -4,7 +4,7 @@ import pygame
 import random
 from automata.automaton import Automaton
 from automata.binary.binary_automaton import BinaryAutomaton
-from automata.binary.builder import binary_automata_from_config
+from automata.binary.builder import binary_automata_from_configs
 from automata.brians_brain_automaton import BriansBrainAutomaton
 from automata.cyclic_cellular_automata import CyclicAutomaton, CyclicGridGenerator
 from automata.forest_fire_automaton import ForestFireAutomaton, ForestFireGridGenerator
@@ -51,7 +51,11 @@ UPSCALING_FACTOR = 2 # The scaling factor that will be applied to AUTOMATA_SIZE 
 #     # anneal
 # ]
 
-binary_automata_callables = binary_automata_from_config(AUTOMATA_SIZE)
+with open('configs/automata.json') as f:
+    configs = json.load(f)
+
+binary_automata_configs = filter(lambda c: c['type'] == 'binary', configs)
+binary_automata_callables = binary_automata_from_configs(binary_automata_configs, AUTOMATA_SIZE)
 
 # non_binary_automata = [
 #     # brians_brain,
