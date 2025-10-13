@@ -38,33 +38,6 @@ def _configged_binary_automaton(bs_notation: str, name: str, game_size: Tuple[in
     automaton = BinaryAutomaton(grid_generators, name, bs_notation, screen_size)
     return automaton
 
-def game_of_life() -> Automaton:
-    return _binary_automaton('B3/S23', 'Game of Life')
-
-# # Supports replicators.
-# def high_life() -> Automaton:
-#     return _binary_automaton('B36/S23', 'High Life')
-
-# # Symmetrical: Inverts under 0↔1 (black ↔ white), making it visually interesting.
-# def day_and_night() -> Automaton:
-#     return _binary_automaton('B3678/S34678', 'Day & Night')
-
-# # Explosive and chaotic, no survival, only birth.
-# def seeds() -> Automaton:
-#     return _binary_automaton('B2/S', 'Seeds', initial_size=25)
-
-# # Once alive, cells stay alive forever — great for growing maze-like structures.
-# def life_without_death() -> Automaton:
-#     return _binary_automaton('B3/S012345678', 'Life Without Death', initial_size=3, alive_chance=0.25)
-
-# # Generates static maze-like patterns.
-# def maze() -> Automaton:
-#     return _binary_automaton('B3/S12345', 'Maze', initial_size=5, alive_chance=0.75)
-
-# # Tends toward equilibrium — "anneals" to stable patterns.
-# def anneal() -> Automaton:
-#     return _binary_automaton('B4678/S35678', 'Anneal', initial_size=AUTOMATA_SIZE[1]-1, alive_chance=0.5)
-
 def _binary_automaton(bs_notation: str, name: str, initial_size: int = None, alive_chance: float = None) -> Automaton:
     if not initial_size:    
         lower_grid_bound = 5
