@@ -23,3 +23,6 @@ python main.py
 | RIGHT | Go to next automaton     |
 | UP    | Increase speed           |
 | DOWN  | Decrease speed           |
+
+## Configuration
+The individual automata settings can be configured in `main.py`. The binary automata have their birth/survival rules configured using [B/S notation](https://en.wikipedia.org/wiki/Life-like_cellular_automaton). For example, Game of Life has notation B3/S23.
