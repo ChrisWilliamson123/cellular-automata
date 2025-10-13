@@ -37,5 +37,22 @@
                 }
             }
         ]
+    },
+    {
+        "name": "Maze",
+        "type": "binary",
+        "bs_notation": "B3/S12345",
+        "grid_generators": [
+            {
+                "initial_size": 5,
+                "alive_chance": 0.75,
+                "center": { "x": 0.33, "y": 0.5}
+            },
+            {
+                "initial_size": 5,
+                "alive_chance": 0.75,
+                "center": { "x": 0.66, "y": 0.5}
+            }
+        ]
     }
 ]
