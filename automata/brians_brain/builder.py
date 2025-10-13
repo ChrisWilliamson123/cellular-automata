@@ -19,13 +19,13 @@ def brians_brain_automata_from_config(automata: dict, game_size: Tuple[int, int]
 def _configged_brians_brain_automaton(name: str, game_size: Tuple[int, int], grid_configs: dict) -> Automaton:
     grid_generators = []
     for gc in grid_configs:
-        initial_size = gc.get('initial_size', get_random_odd_number(5, game_size[1] // 4))
+        initial_size_percentage = gc.get('initial_size_percentage', random.uniform(0.1, 1))
         alive_chance = gc.get('alive_chance', random.uniform(0.2, 0.8))
         center_x, center_y = gc['center']['x'], gc['center']['y']
         center_x = int(center_x * game_size[0])
         center_y = int(center_y * game_size[0])
         center = (center_x, center_y)
-        gen = BriansBrainGridGenerator(game_size, initial_size, center, alive_chance)
+        gen = BriansBrainGridGenerator(game_size, initial_size_percentage, center, alive_chance)
         grid_generators.append(gen)
     automaton = BriansBrainAutomaton(grid_generators, name, game_size)
     return automaton

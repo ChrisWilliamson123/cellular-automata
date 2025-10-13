@@ -18,8 +18,6 @@ class GridGenerator(ABC):
 
     def generate_grid(self) -> npt.NDArray[np.uint8]:
         vfunc = np.vectorize(self.get_cell_state)
-        print(self.grid_size)
-
         to_return = np.fromfunction(vfunc, self.grid_size)
         return to_return
 

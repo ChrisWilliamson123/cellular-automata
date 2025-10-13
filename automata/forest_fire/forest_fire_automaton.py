@@ -17,12 +17,12 @@ class ForestFireState(Enum):
     DEAD=0
 
 class ForestFireGridGenerator(GridGenerator):
-    def __init__(self, screen_size: Tuple[int, int], grid_size: Annotated[int, 'must be an odd number'], center: Tuple[int, int], tree_chance: Annotated[float, 'in range 0...1'], burning_chance: Annotated[float, 'in range 0...1'], lake_chance: Annotated[float, 'in range 0...1'] = 0, lake_size: int = 0, lake_amount: int = 1):
-        super().__init__(screen_size, grid_size, center)
+    def __init__(self, screen_size: Tuple[int, int], grid_size_percentage: int, center: Tuple[int, int], tree_chance: Annotated[float, 'in range 0...1'], burning_chance: Annotated[float, 'in range 0...1'], lake_chance: Annotated[float, 'in range 0...1'] = 0, lake_size: int = 0, lake_amount: int = 1):
+        super().__init__(screen_size, grid_size_percentage, center)
 
         self.tree_chance = tree_chance
         self.burning_chance = burning_chance
-        self.grid_size = grid_size
+        self.grid_size_percentage = grid_size_percentage
         self.lake_chance = lake_chance
         self.lake_size = lake_size
         self.lake_amount = lake_amount
@@ -32,9 +32,9 @@ class ForestFireGridGenerator(GridGenerator):
         if random.uniform(0, 1) <= self.lake_chance:
             for _ in range(self.lake_amount):
                 # lake_x, lake_y = random.randint(int(self.center[0] - (self.grid_size / 2)), int(self.center[0] + (self.grid_size / 2))), random.randint(int(self.center[1] - (self.grid_size / 2)), int(self.center[1] + (self.grid_size / 2)))
-                lake_x, lake_y = random.randint(0, self.grid_size-1), random.randint(0, self.grid_size-1)
+                lake_x, lake_y = random.randint(0, self.grid_size[0]), random.randint(0, self.grid_size[1])
                 for _ in range(self.lake_size):
-                    if lake_y < self.grid_size and lake_x < self.grid_size:
+                    if lake_y < self.grid_size[1] and lake_x < self.grid_size[0]:
                         state[(lake_x, lake_y)] = ForestFireState.WATER.value
                     lake_x += random.randint(-1, 1)
                     lake_y += random.randint(-1, 1)
