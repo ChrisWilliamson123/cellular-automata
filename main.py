@@ -7,7 +7,8 @@ from automata.binary.binary_automaton import BinaryAutomaton
 from automata.binary.builder import binary_automata_from_configs
 from automata.brians_brain_automaton import BriansBrainAutomaton
 from automata.cyclic_cellular_automata import CyclicAutomaton, CyclicGridGenerator
-from automata.forest_fire_automaton import ForestFireAutomaton, ForestFireGridGenerator
+from automata.forest_fire.builder import forest_fire_automata_from_configs
+from automata.forest_fire.forest_fire_automaton import ForestFireAutomaton, ForestFireGridGenerator
 import automata_runner
 from grid_generator.binary_grid_generator import BinaryGridGenerator
 from grid_generator.brians_brain_grid_generator import BriansBrainGridGenerator
@@ -57,10 +58,13 @@ with open('configs/automata.json') as f:
 binary_automata_configs = filter(lambda c: c['type'] == 'binary', configs)
 binary_automata_callables = binary_automata_from_configs(binary_automata_configs, AUTOMATA_SIZE)
 
+forest_fire_configs = filter(lambda c: c['type'] == 'forest-fire', configs)
+forest_fire_callables = forest_fire_automata_from_configs(forest_fire_configs, AUTOMATA_SIZE)
+
 # non_binary_automata = [
 #     # brians_brain,
 #     # cyclic,
 #     # forest_fire
 # ]
 
-automata_runner.run(AUTOMATA_SIZE, UPSCALING_FACTOR, binary_automata_callables)
+automata_runner.run(AUTOMATA_SIZE, UPSCALING_FACTOR, binary_automata_callables + forest_fire_callables)
