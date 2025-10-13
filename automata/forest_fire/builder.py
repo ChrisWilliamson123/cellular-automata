@@ -6,18 +6,14 @@ from automata.automaton import Automaton
 from automata.forest_fire.forest_fire_automaton import ForestFireAutomaton, ForestFireGridGenerator
 from helpers import get_random_odd_number
 
-def forest_fire_automata_from_configs(configs: List[dict], game_size: Tuple[int, int]) -> List[Callable[[], Automaton]]:
+def forest_fire_automata_from_config(automata: dict, game_size: Tuple[int, int]) -> Callable[[], Automaton]:
     def make_callable(name: str, game_size: Tuple[int, int], grid_configs: dict):
         return lambda: _configged_forest_fire_automaton(name, game_size, grid_configs)
 
-    callables = []
-    for automata in configs:
-        name = automata['name']
-        config = automata['config']
-        grid_configs = config['grid_generators']
-        callables.append(make_callable(name, game_size, grid_configs))
-
-    return callables
+    name = automata['name']
+    config = automata['config']
+    grid_configs = config['grid_generators']
+    return make_callable(name, game_size, grid_configs)
 
 def _configged_forest_fire_automaton(name: str, game_size: Tuple[int, int], grid_configs: dict) -> Automaton:
     grid_generators = []

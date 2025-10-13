@@ -1,5 +1,25 @@
 [
     {
+        "name": "Forest Fire",
+        "type": "forest-fire",
+        "config": {
+            "grid_generators": [
+                {
+                    "initial_size": 101,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "tree_chance": 0.6,
+                    "burning_chance": 0.00001,
+                    "lake_chance": 1,
+                    "lake_size": 1000,
+                    "lake_amount": 5
+                }
+            ]
+        }
+    },
+    {
         "name": "Maze",
         "type": "binary",
         "config": {
@@ -113,26 +133,6 @@
                         "x": 0.5,
                         "y": 0.5
                     }
-                }
-            ]
-        }
-    },
-    {
-        "name": "Forest Fire",
-        "type": "forest-fire",
-        "config": {
-            "grid_generators": [
-                {
-                    "initial_size": 101,
-                    "center": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "tree_chance": 0.6,
-                    "burning_chance": 0.00001,
-                    "lake_chance": 1,
-                    "lake_size": 1000,
-                    "lake_amount": 5
                 }
             ]
         }
