@@ -1,5 +1,21 @@
 [
     {
+        "name": "Brian's Brain",
+        "type": "brians-brain",
+        "config": {
+            "grid_generators": [
+                {
+                    "initial_size": 25,
+                    "alive_chance": 0.5,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
         "name": "Forest Fire",
         "type": "forest-fire",
         "config": {
