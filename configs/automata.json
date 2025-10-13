@@ -14,5 +14,22 @@
                 }
             ]
         }
+    },
+    {
+        "name": "Game of Life",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3/S23",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 1,
+                    "alive_chance": 0.05,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
     }
 ]

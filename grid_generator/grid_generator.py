@@ -10,14 +10,15 @@ class GridGenerator(ABC):
         self.center = center
         width = int(self.screen_size[0] * self.grid_size_percentage)
         if width % 2 == 0:
-            width =- 1
+            width -= 1
         height = int(self.screen_size[1] * self.grid_size_percentage)
         if height % 2 == 0:
-            height =- 1
+            height -= 1
         self.grid_size = (width, height)
 
     def generate_grid(self) -> npt.NDArray[np.uint8]:
         vfunc = np.vectorize(self.get_cell_state)
+        print(self.grid_size)
 
         to_return = np.fromfunction(vfunc, self.grid_size)
         return to_return
