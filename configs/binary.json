@@ -1,0 +1,41 @@
+[
+    {
+        "name": "Game of Life",
+        "type": "binary",
+        "bs_notation": "B3/S23",
+        "grid_generators": [
+            {
+                "initial_size": 25,
+                "alive_chance": 0.5,
+                "center": {
+                    "x": 0.25,
+                    "y": 0.25
+                }
+            },
+            {
+                "initial_size": 25,
+                "alive_chance": 0.5,
+                "center": {
+                    "x": 0.75,
+                    "y": 0.25
+                }
+            },
+            {
+                "initial_size": 25,
+                "alive_chance": 0.5,
+                "center": {
+                    "x": 0.25,
+                    "y": 0.75
+                }
+            },
+            {
+                "initial_size": 25,
+                "alive_chance": 0.5,
+                "center": {
+                    "x": 0.75,
+                    "y": 0.75
+                }
+            }
+        ]
+    }
+]
