@@ -1,0 +1,156 @@
+[
+    {
+        "name": "Brian's Brain",
+        "type": "brians-brain",
+        "config": {
+            "grid_generators": [
+                {
+                    "initial_size": 25,
+                    "alive_chance": 0.5,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Forest Fire",
+        "type": "forest-fire",
+        "config": {
+            "grid_generators": [
+                {
+                    "initial_size": 101,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "tree_chance": 0.6,
+                    "burning_chance": 0.00001,
+                    "lake_chance": 1,
+                    "lake_size": 1000,
+                    "lake_amount": 5
+                }
+            ]
+        }
+    },
+    {
+        "name": "Maze",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3/S12345",
+            "grid_generators": [
+                {
+                    "initial_size": 5,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Game of Life",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3/S23",
+            "grid_generators": [
+                {
+                    "initial_size": 25,
+                    "alive_chance": 0.5,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "High Life",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B36/S23",
+            "grid_generators": [
+                {
+                    "initial_size": 5,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Day & Night",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3678/S34678",
+            "grid_generators": [
+                {
+                    "initial_size": 5,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Seeds",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B2/S",
+            "grid_generators": [
+                {
+                    "initial_size": 5,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Life Without Death",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3/S012345678",
+            "grid_generators": [
+                {
+                    "initial_size": 5,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Anneal",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B45678/S35678",
+            "grid_generators": [
+                {
+                    "initial_size": 5,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    }
+]
