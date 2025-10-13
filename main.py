@@ -13,23 +13,6 @@ from grid_generator.binary_grid_generator import BinaryGridGenerator
 from grid_generator.brians_brain_grid_generator import BriansBrainGridGenerator
 from helpers import get_random_odd_number
 
-
-
-def _binary_automaton(bs_notation: str, name: str, initial_size: int = None, alive_chance: float = None) -> Automaton:
-    if not initial_size:    
-        lower_grid_bound = 5
-        upper_grid_bound = 100
-        initial_size = get_random_odd_number(lower_grid_bound, upper_grid_bound)
-    if not alive_chance:
-        alive_chance = random.uniform(0.3, 0.9)
-    grid_generators = [
-        # GridGenerator(initial_size, alive_chance, (screen_size[0] / 2, screen_size[1] / 2)),
-        BinaryGridGenerator(screen_size, initial_size, (screen_size[0] // 2, screen_size[1] // 2), alive_chance)
-    ]
-    automaton = BinaryAutomaton(grid_generators, name, bs_notation, screen_size)
-    # automata = Automaton(grid_generators, next_state_generator, screen_size, name, f'{bs_notation}, GS: {initial_size}, AC: {alive_chance:.2f}')
-    return automaton
-
 def brians_brain() -> Automaton:
     grid_generators = [
         BriansBrainGridGenerator(25, (screen_size[0] / 2, screen_size[1] / 2), 0.45),

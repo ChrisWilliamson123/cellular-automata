@@ -6,7 +6,6 @@
         "grid_generators": [
             {
                 "initial_size": 5,
-                "alive_chance": 0.75,
                 "center": { "x": 0.5, "y": 0.5 }
             }
         ]

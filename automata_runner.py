@@ -18,7 +18,7 @@ def run(screen_size: Tuple[int, int], upscaling_factor: int, automata: List[Call
     running = True
 
     dt = 0
-    framerate = 120
+    framerate = 10
 
     current_automaton_index = 0
     current_automaton = automata[current_automaton_index]()
