@@ -152,5 +152,22 @@
                 }
             ]
         }
+    },
+    {
+        "name": "Flood (CW)",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B345678/S46",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 1,
+                    "alive_chance": 0.125,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
     }
 ]
