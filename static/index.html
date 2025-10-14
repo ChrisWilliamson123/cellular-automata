@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Cellular Automaton Viewer</title>
+    <style>
+        canvas {
+            width: auto;
+            height: 50vh;
+            image-rendering: pixelated;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="ca" width="300" height="300"></canvas>
+    <br>
+    <button id="toggle">Pause/Resume</button>
+    <select id="rule">
+        <option>Game of Life</option>
+        <option>HighLife</option>
+        <option>Seeds</option>
+    </select>
+
+    <script>
+        const ws = new WebSocket(`ws://${location.host}/ws`);
+        ws.binaryType = "arraybuffer";
+
+        const canvas = document.getElementById("ca");
+        const ctx = canvas.getContext("2d");
+
+        ws.onmessage = (event) => {
+            console.log('Received message');
+            const bytes = new Uint8ClampedArray(event.data);
+            const imgData = new ImageData(bytes, 300, 300);
+            console.log(imgData);
+
+            // const bytes = new Uint8ClampedArray([255, 0, 0, 255]);
+            // const imgData = new ImageData(bytes, 1, 1);
+            // console.log(imgData);
+            ctx.putImageData(imgData, 0, 0);
+        };
+
+        document.getElementById("toggle").onclick = () => {
+            ws.send(JSON.stringify({ type: "toggle" }));
+        };
+
+        document.getElementById("rule").onchange = (e) => {
+            ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
+        };
+    </script>
+</body>
+
+</html>

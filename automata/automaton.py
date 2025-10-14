@@ -38,6 +38,10 @@ class Automaton(ABC):
     def render(self, surface):
         pass
 
+    @abstractmethod
+    def get_frame(self):
+        pass
+
     def should_reset(self) -> bool:
         return (self.state == self.prev_states[0]).all()
     

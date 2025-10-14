@@ -36,6 +36,15 @@ class BinaryAutomaton(Automaton):
         grid_surface = pygame.surfarray.make_surface(coloured)
         surface.blit(grid_surface, (0, 0))
 
+    def get_frame(self):
+        # Create an RGBA image with white for alive cells and black for dead cells
+        rgba = np.zeros((self.state.shape[0], self.state.shape[1], 4), dtype=np.uint8)
+        rgba[..., 0] = self.state * BinaryAutomaton.COLOURS[1][0] # Red
+        rgba[..., 1] = self.state * BinaryAutomaton.COLOURS[1][1] # Green
+        rgba[..., 2] = self.state * BinaryAutomaton.COLOURS[1][2] # Blue
+        rgba[..., 3] = 255                    # Alpha channel always maxed
+        return rgba
+
     def debug_string(self):
         # return f'{self.bs_notation}, GS: {initial_size}, AC: {alive_chance:.2f}'
         return f'{self.bs_notation}'
