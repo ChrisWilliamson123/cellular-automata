@@ -5,7 +5,7 @@ from typing import Callable, List
 from automata.automaton import Automaton
 from automata.binary.binary_automaton import BinaryAutomaton
 from automata.binary.builder import binary_automata_from_config
-import automata_runner
+import runners.automata_runner as automata_runner
 from grid_generator.binary_grid_generator import BinaryGridGenerator
 
 def random_bs_notation() -> str:

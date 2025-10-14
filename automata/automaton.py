@@ -14,6 +14,7 @@ class Automaton(ABC):
         self.grid_generators = grid_generators
         self.name = name
         self.paused = False
+        self.iterations = 0
         self.reset()
 
     def iterate(self, dt):
@@ -24,6 +25,7 @@ class Automaton(ABC):
         self.prev_states[0] = self.prev_states[1]
         self.prev_states[1] = self.state
         self.state = new_state
+        self.iterations += 1
 
         if self.should_reset():
             self.reset()
@@ -52,6 +54,7 @@ class Automaton(ABC):
             master_grid[l:l+g.grid_size[0], t:t+g.grid_size[1]] = grid
         self.state = master_grid
         self.prev_states = [None, None]
+        self.iterations = 0
 
     def cleanup(self):
         pass

@@ -3,7 +3,7 @@ import pygame
 
 from automata.automaton import Automaton
 
-def run(screen_size: Tuple[int, int], upscaling_factor: int, automata: List[Callable[[], Automaton]], caption = 'Automata'):
+def run(screen_size: Tuple[int, int], upscaling_factor: int, automata: List[Callable[[], Automaton]], caption = 'Automata', show_text_overlays = True, framerate = 120):
     pygame.init()
 
     screen_size = pygame.Vector2(screen_size[0], screen_size[1])
@@ -18,7 +18,7 @@ def run(screen_size: Tuple[int, int], upscaling_factor: int, automata: List[Call
     running = True
 
     dt = 0
-    framerate = 120
+    framerate = framerate
 
     current_automaton_index = 0
     current_automaton = automata[current_automaton_index]()
@@ -53,21 +53,22 @@ def run(screen_size: Tuple[int, int], upscaling_factor: int, automata: List[Call
         upscaled = pygame.transform.scale_by(screen, upscaling_factor)
         main_screen.blit(upscaled, (0, 0))
 
-        # TEXT
-        text_surface = my_font.render(f'{current_automaton.name}{(", " + current_automaton.debug_string()) if len(current_automaton.debug_string()) > 0 else ""}', False, (255, 255, 255)).convert()
-        padding = 8
-        temp_surface = pygame.Surface((text_surface.get_width() + (padding * 2), text_surface.get_height() + padding))
-        temp_surface.fill((0, 0, 0))
-        temp_surface.blit(text_surface, (padding, padding / 2))
-        main_screen.blit(temp_surface, (0, main_screen.get_height() - temp_surface.get_height()))
+        if show_text_overlays:
+            # TEXT
+            text_surface = my_font.render(f'{current_automaton.name}{(", " + current_automaton.debug_string()) if len(current_automaton.debug_string()) > 0 else ""}', False, (255, 255, 255)).convert()
+            padding = 8
+            temp_surface = pygame.Surface((text_surface.get_width() + (padding * 2), text_surface.get_height() + padding))
+            temp_surface.fill((0, 0, 0))
+            temp_surface.blit(text_surface, (padding, padding / 2))
+            main_screen.blit(temp_surface, (0, main_screen.get_height() - temp_surface.get_height()))
 
-        # Global Text
-        text_surface = my_font.render(f'{framerate} FPS', False, (255, 255, 255)).convert()
-        padding = 8
-        temp_surface = pygame.Surface((text_surface.get_width() + (padding * 2), text_surface.get_height() + padding))
-        temp_surface.fill((0, 0, 0))
-        temp_surface.blit(text_surface, (padding, padding / 2))
-        main_screen.blit(temp_surface, (0, 0))
+            # Global Text
+            text_surface = my_font.render(f'{framerate} FPS', False, (255, 255, 255)).convert()
+            padding = 8
+            temp_surface = pygame.Surface((text_surface.get_width() + (padding * 2), text_surface.get_height() + padding))
+            temp_surface.fill((0, 0, 0))
+            temp_surface.blit(text_surface, (padding, padding / 2))
+            main_screen.blit(temp_surface, (0, 0))
 
         pygame.display.flip()
         current_automaton.iterate(dt)
