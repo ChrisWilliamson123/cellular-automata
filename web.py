@@ -10,7 +10,7 @@ from automata.binary.builder import binary_automata_from_config
 from automata.brians_brain.builder import brians_brain_automata_from_config
 from automata.forest_fire.builder import forest_fire_automata_from_config
 
-FRAMERATE = 60 # Frames per second
+
 
 ALIVE_COLOUR = (255, 255, 255)
 
@@ -38,29 +38,32 @@ aut = gol()
 app = FastAPI()
 
 async def automaton(ws: WebSocket):
+    framerate = 60 # Frames per second
     running = True
     rule = "Game of Life"
 
     await ws.accept()
     while True:
         try:
-            msg = await asyncio.wait_for(ws.receive_text(),timeout=1 / FRAMERATE)
+            msg = await asyncio.wait_for(ws.receive_text(),timeout=1 / framerate)
             msg = json.loads(msg)
             if msg["type"] == "toggle":
                 running = not running
             elif msg["type"] == "rule":
                 rule = msg["rule"]
+            elif msg["type"] == "reset":
+                aut.reset()
+            elif msg["type"] == "framerate":
+                framerate = int(msg["framerate"])
         except asyncio.TimeoutError:
             pass
 
         if running:
             aut.iterate(0)
-
             frame = aut.get_frame()
-
             await ws.send_bytes(frame.tobytes())
 
-        await asyncio.sleep(1 / FRAMERATE)
+        await asyncio.sleep(1 / framerate)
 
 def step(grid, rule):
     # Example simple rule (replace with yours)

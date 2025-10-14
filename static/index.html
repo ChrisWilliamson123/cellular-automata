@@ -14,6 +14,10 @@
         button {
             margin: 5px;
         }
+
+        .slider {
+            width: 100px;
+        }
     </style>
 </head>
 
@@ -21,11 +25,18 @@
     <canvas id="ca" width="300" height="300"></canvas>
     <br>
     <button id="toggle">Pause/Resume</button>
+    <button id="reset">Reset</button>
     <select id="rule">
         <option>Game of Life</option>
         <option>HighLife</option>
         <option>Seeds</option>
     </select>
+    <br>
+    <div class="slidecontainer">
+        <input type="range" min="1" max="120" value="60" class="slider" id="framerateSlider">
+        <span id="framerateValue"></span>
+        <span>FPS</span>
+    </div>
 
     <script>
         const ws = new WebSocket(`ws://${location.host}/ws`);
@@ -35,14 +46,8 @@
         const ctx = canvas.getContext("2d");
 
         ws.onmessage = (event) => {
-            console.log('Received message');
             const bytes = new Uint8ClampedArray(event.data);
             const imgData = new ImageData(bytes, 300, 300);
-            console.log(imgData);
-
-            // const bytes = new Uint8ClampedArray([255, 0, 0, 255]);
-            // const imgData = new ImageData(bytes, 1, 1);
-            // console.log(imgData);
             ctx.putImageData(imgData, 0, 0);
         };
 
@@ -50,9 +55,21 @@
             ws.send(JSON.stringify({ type: "toggle" }));
         };
 
+        document.getElementById("reset").onclick = () => {
+            ws.send(JSON.stringify({ type: "reset" }));
+        };
+
         document.getElementById("rule").onchange = (e) => {
             ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
         };
+
+        const slider = document.getElementById("framerateSlider");
+        const output = document.getElementById("framerateValue");
+        output.innerHTML = slider.value; // Display the default slider value
+        slider.oninput = (e) => {
+            output.innerHTML = e.target.value;
+            ws.send(JSON.stringify({ type: "framerate", framerate: e.target.value }));
+        }
     </script>
 </body>
 
