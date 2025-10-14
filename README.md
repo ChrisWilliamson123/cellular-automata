@@ -1,7 +1,7 @@
 # Cellular Automata
 A collection of cellular automata that are visualised through the Pygame framework.
 
-## Setup
+## Setup
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
