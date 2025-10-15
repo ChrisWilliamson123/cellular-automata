@@ -52,8 +52,15 @@
 
                     <h6>Framerate</h6>
                     <div class="d-flex align-items-center justify-content-between">
-                        <input type="range" min="1" max="120" value="60" class="form-range flex-grow-1 me-2"
-                            id="framerateSlider">
+                        <input type="range" min="1" max="120" value="60" class="form-range flex-grow-1 me-2" id="framerateSlider" list="framerateValues">
+                        <datalist id="framerateValues">
+                            <option value="1">
+                            <option value="15">
+                            <option value="30">
+                            <option value="60">
+                            <option value="90">
+                            <option value="120">
+                        </datalist>
                         <span id="framerateValue" class="fw-bold">60</span><span class="ms-1">FPS</span>
                     </div>
                 </div>

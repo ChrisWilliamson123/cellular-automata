@@ -36,14 +36,6 @@ document.getElementById("rule").onchange = (e) => {
     ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
 };
 
-const slider = document.getElementById("framerateSlider");
-const output = document.getElementById("framerateValue");
-output.innerHTML = slider.value; // Display the default slider value
-slider.oninput = (e) => {
-    output.innerHTML = e.target.value;
-    ws.send(JSON.stringify({ type: "framerate", framerate: e.target.value }));
-}
-
 function updateBSNotation(notation) {
     document.getElementById("bs-value").textContent = notation;
 }
@@ -58,6 +50,16 @@ function updateBSNotation(notation) {
 // });
 
 // FRAMERATE HANDLING
+const framerateSlider = document.getElementById("framerateSlider");
+const framerateText = document.getElementById("framerateValue");
+
+// When the user changes the framerate value
+framerateSlider.onchange = (e) => {
+    framerateText.innerHTML = e.target.value;
+    ws.send(JSON.stringify({ type: "framerate", framerate: e.target.value }));
+};
+
+// When we want to update the framerate slider and text based on socket event
 const updateFramerateContent = (framerate) => {
     document.getElementById("framerateValue").textContent = framerate;
     document.getElementById("framerateSlider").value = framerate;
