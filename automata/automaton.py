@@ -7,38 +7,21 @@ from grid_generator.grid_generator import GridGenerator
 
 State = TypeVar('State', bound=np.generic, covariant=True)
 
-class AutomatonDelegate(ABC):
-    @abstractmethod
-    def did_change_rewind(self, isRewinding):
-        pass
-
-class PassiveAutomatonDelegate(AutomatonDelegate):
-    def did_change_rewind(self, isRewinding):
-        pass
-
 class Automaton(ABC):
     state: npt.NDArray[np.uint8]
 
     def __init__(self, grid_generators: List[GridGenerator], name: str):
         self.grid_generators = grid_generators
         self.name = name
-        self.paused = False
-        self.reverse = False
-        self.iteration_count = 0
+        self.iteration_index = 0
+        self.total_iterations = 0
         self.iterations = []
-        self.delegate: AutomatonDelegate = PassiveAutomatonDelegate()
         self.reset()
 
     def iterate(self, dt):
-        if self.paused:
-            return
-        
-        if self.reverse:
-            if len(self.iterations) == 0:
-                self.reverse = False
-                self.paused = True
-            else:
-                self.state = self.iterations.pop()
+        if self.iteration_index < self.total_iterations - 1:
+            self.state = self.iterations[self.iteration_index + 1]
+            self.iteration_index += 1
             return
 
         new_state = self.get_next_state(dt)
@@ -46,11 +29,24 @@ class Automaton(ABC):
         self.prev_states[0] = self.prev_states[1]
         self.prev_states[1] = self.state
         self.state = new_state
-        self.iteration_count += 1
         self.iterations.append(self.state)
+        self.total_iterations += 1
+        self.iteration_index += 1
 
         if self.should_reset():
             self.reset()
+
+    def rewind(self):
+        if self.total_iterations > 0:
+            if self.iteration_index > 0:
+                self.state = self.iterations[self.iteration_index - 1]
+                self.iteration_index -= 1
+            else:
+                # At start of iterations
+                pass
+        else:
+            # No iterations available
+            pass
 
     @abstractmethod
     def get_next_state(self) -> npt.NDArray[np.uint8]:
@@ -83,11 +79,9 @@ class Automaton(ABC):
             master_grid[l:l+g.grid_size[0], t:t+g.grid_size[1]] = grid
         self.state = master_grid
         self.prev_states = [None, None]
-        self.iteration_count = 0
+        self.iteration_index = 0
+        self.total_iterations = 1
         self.iterations = [self.state]
 
     def cleanup(self):
         pass
-
-    def toggle_pause(self):
-        self.paused = not self.paused

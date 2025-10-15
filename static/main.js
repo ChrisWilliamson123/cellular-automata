@@ -14,6 +14,9 @@ ws.onmessage = (event) => {
         } else if (message.type === "init") {
             const data = message.data;
             performInitialisation(data);
+        } else if (message.type === "state") {
+            const state = message.data;
+            updateState(state)
         }
     } else {
         // Binary data (frame)
@@ -21,6 +24,11 @@ ws.onmessage = (event) => {
         const imgData = new ImageData(bytes, 300, 300);
         ctx.putImageData(imgData, 0, 0);
     }
+};
+
+const updateState = (state) => {
+    updatePlayPauseButton(state.isPaused);
+    updateRewindButton(state.isRewinding);
 };
 
 // document.getElementById("rule").onchange = (e) => {
@@ -49,7 +57,7 @@ const playPauseIcon = document.getElementById("playPauseIcon");
 
 playPauseBtn.onclick = () => {
     // Send message to server
-    ws.send(JSON.stringify({ type: "toggle" }));
+    ws.send(JSON.stringify({ type: "togglePause" }));
     // Assume success
     if (playPauseIcon.classList.contains("bi-play-fill")) {
         updatePlayPauseButton(false);
@@ -80,16 +88,16 @@ const updateMetadata = (metadata) => {
     subtitle.textContent = metadata.subtitle;
 
     const iterations = document.getElementById("iterations");
-    iterations.textContent = metadata.iterations;
+    iterations.textContent = `${metadata.iterationIndex + 1} / ${metadata.totalIterations}`;
 
-    updatePlayPauseButton(metadata.isPaused)
-    handleRewind(metadata.isRewinding);
+    // updatePlayPauseButton(metadata.isPaused)
+    // handleRewind(metadata.isRewinding);
 };
 
 // INITIALISATION
 const automataList = document.getElementById('automataList');
 const performInitialisation = (initialisationData) => {
-    updateFramerateContent(initialisationData.framerate);
+    // updateFramerateContent(initialisationData.framerate);
 
     automataList.innerHTML = initialisationData.automataNames.map((name, index) => {
         if (index == 0) {
@@ -126,7 +134,7 @@ document.querySelectorAll("#speedControls .btn").forEach(item => {
 const rewindBtn = document.getElementById("rewindBtn");
 const rewindIcon = document.getElementById("rewindIcon");
 
-const handleRewind = (isRewinding) => {
+const updateRewindButton = (isRewinding) => {
     if (isRewinding) {
         rewindIcon.classList.replace("bi-rewind", "bi-rewind-fill");
         rewindBtn.classList.replace("btn-outline-secondary", "btn-secondary");
@@ -139,5 +147,5 @@ const handleRewind = (isRewinding) => {
 rewindBtn.onclick = () => {
     ws.send(JSON.stringify({ type: "rewind" }));
     const isRewinding = !rewindIcon.classList.contains("bi-rewind-fill");
-    handleRewind(isRewinding);
+    updateRewindButton(isRewinding);
 };
