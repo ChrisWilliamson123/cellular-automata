@@ -20,6 +20,7 @@ class Automaton(ABC):
     def iterate(self, dt):
         if self.paused:
             return
+
         new_state = self.get_next_state(dt)
 
         self.prev_states[0] = self.prev_states[1]

@@ -10,8 +10,7 @@ ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
         if (message.type === "metadata") {
             const metadata = message.data;
-            document.getElementById("subtitle").textContent = metadata.subtitle;
-            document.getElementById("iterations").textContent = metadata.iterations;
+            updateMetadata(metadata);
         } else if (message.type === "init") {
             const data = message.data;
             updateFramerateContent(data.framerate);
@@ -24,21 +23,9 @@ ws.onmessage = (event) => {
     }
 };
 
-document.getElementById("toggle").onclick = () => {
-    ws.send(JSON.stringify({ type: "toggle" }));
-};
-
-document.getElementById("reset").onclick = () => {
-    ws.send(JSON.stringify({ type: "reset" }));
-};
-
-document.getElementById("rule").onchange = (e) => {
-    ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
-};
-
-function updateBSNotation(notation) {
-    document.getElementById("bs-value").textContent = notation;
-}
+// document.getElementById("rule").onchange = (e) => {
+//     ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
+// };
 
 // Sidebar automata click selection
 // document.querySelectorAll("#automataList .list-group-item").forEach(item => {
@@ -63,4 +50,46 @@ framerateSlider.onchange = (e) => {
 const updateFramerateContent = (framerate) => {
     document.getElementById("framerateValue").textContent = framerate;
     document.getElementById("framerateSlider").value = framerate;
+};
+
+// PLAY/PAUSE
+const playPauseBtn = document.getElementById("playPauseBtn");
+const playPauseIcon = document.getElementById("playPauseIcon");
+
+playPauseBtn.onclick = () => {
+    // Send message to server
+    ws.send(JSON.stringify({ type: "toggle" }));
+    // Assume success
+    if (playPauseIcon.classList.contains("bi-play-fill")) {
+        updatePlayPauseButton(false);
+    } else {
+        updatePlayPauseButton(true);
+    }
+};
+
+const updatePlayPauseButton = (isPaused) => {
+    if (isPaused) {
+        playPauseIcon.classList.remove("bi-pause-fill");
+        playPauseIcon.classList.add("bi-play-fill");
+    } else {
+        playPauseIcon.classList.remove("bi-play-fill");
+        playPauseIcon.classList.add("bi-pause-fill");
+    }
+};
+
+// RESET
+const resetBtn = document.getElementById("resetBtn");
+resetBtn.onclick = () => {
+    ws.send(JSON.stringify({ type: "reset" }));
+};
+
+// METADATA
+const updateMetadata = (metadata) => {
+    const subtitle = document.getElementById("subtitle");
+    subtitle.textContent = metadata.subtitle;
+
+    const iterations = document.getElementById("iterations");
+    iterations.textContent = metadata.iterations;
+
+    updatePlayPauseButton(metadata.isPaused)
 };
