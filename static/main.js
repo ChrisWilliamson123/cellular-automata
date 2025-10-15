@@ -8,8 +8,13 @@ ws.onmessage = (event) => {
     if (typeof event.data === "string") {
         // JSON messages will come through as strings
         const message = JSON.parse(event.data);
-        if (message.type === "subtitle") {
-            document.getElementById("subtitle").textContent = message.data;
+        if (message.type === "metadata") {
+            const metadata = message.data;
+            document.getElementById("subtitle").textContent = metadata.subtitle;
+            document.getElementById("iterations").textContent = metadata.iterations;
+        } else if (message.type === "init") {
+            const data = message.data;
+            updateFramerateContent(data.framerate);
         }
     } else {
         // Binary data (frame)
@@ -18,7 +23,6 @@ ws.onmessage = (event) => {
         ctx.putImageData(imgData, 0, 0);
     }
 };
-
 
 document.getElementById("toggle").onclick = () => {
     ws.send(JSON.stringify({ type: "toggle" }));
@@ -52,3 +56,9 @@ function updateBSNotation(notation) {
 //     ws.send(JSON.stringify({ type: "rule", rule: item.textContent.trim() }));
 //   });
 // });
+
+// FRAMERATE HANDLING
+const updateFramerateContent = (framerate) => {
+    document.getElementById("framerateValue").textContent = framerate;
+    document.getElementById("framerateSlider").value = framerate;
+};

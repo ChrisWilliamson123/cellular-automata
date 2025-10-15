@@ -42,7 +42,7 @@ class BinaryAutomaton(Automaton):
         rgba[..., 0] = self.state * BinaryAutomaton.COLOURS[1][0] # Red
         rgba[..., 1] = self.state * BinaryAutomaton.COLOURS[1][1] # Green
         rgba[..., 2] = self.state * BinaryAutomaton.COLOURS[1][2] # Blue
-        rgba[..., 3] = 255                    # Alpha channel always maxed
+        rgba[..., 3] = 255                                        # Alpha channel always maxed
         return rgba
 
     def debug_string(self):
