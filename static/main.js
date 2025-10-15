@@ -13,7 +13,7 @@ ws.onmessage = (event) => {
             updateMetadata(metadata);
         } else if (message.type === "init") {
             const data = message.data;
-            updateFramerateContent(data.framerate);
+            performInitialisation(data);
         }
     } else {
         // Binary data (frame)
@@ -26,15 +26,6 @@ ws.onmessage = (event) => {
 // document.getElementById("rule").onchange = (e) => {
 //     ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
 // };
-
-// Sidebar automata click selection
-// document.querySelectorAll("#automataList .list-group-item").forEach(item => {
-//   item.addEventListener("click", () => {
-//     document.querySelectorAll("#automataList .list-group-item").forEach(i => i.classList.remove("active"));
-//     item.classList.add("active");
-//     ws.send(JSON.stringify({ type: "rule", rule: item.textContent.trim() }));
-//   });
-// });
 
 // FRAMERATE HANDLING
 const framerateSlider = document.getElementById("framerateSlider");
@@ -92,4 +83,31 @@ const updateMetadata = (metadata) => {
     iterations.textContent = metadata.iterations;
 
     updatePlayPauseButton(metadata.isPaused)
+};
+
+// INITIALISATION
+const automataList = document.getElementById('automataList');
+const performInitialisation = (initialisationData) => {
+    updateFramerateContent(initialisationData.framerate);
+
+    automataList.innerHTML = initialisationData.automataNames.map((name, index) => {
+        if (index == 0) {
+            return `<li class="list-group-item automata-option active">${name}</li>`
+        } else {
+            return `<li class="list-group-item automata-option">${name}</li>`
+        }
+    }).join('');
+    addAutomataClickEvents();
+};
+
+// CHANGING AUTOMATA
+const addAutomataClickEvents = () => {
+    document.querySelectorAll("#automataList .list-group-item").forEach(item => {
+        item.addEventListener("click", () => {
+            console.log('here');
+            document.querySelectorAll("#automataList .list-group-item").forEach(i => i.classList.remove("active"));
+            item.classList.add("active");
+            ws.send(JSON.stringify({ type: "changeAutomata", name: item.textContent.trim() }));
+        });
+    });
 };

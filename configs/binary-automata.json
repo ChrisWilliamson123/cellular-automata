@@ -1,0 +1,137 @@
+[
+    {
+        "name": "Maze",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3/S12345",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.05,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Game of Life",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3/S23",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.05,
+                    "alive_chance": 0.5,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "High Life",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B36/S23",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.05,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Day & Night",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3678/S34678",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 1,
+                    "alive_chance": 0.4,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Seeds",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B2/S",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.05,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Life Without Death",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3/S012345678",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.01,
+                    "alive_chance": 0.75,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Anneal",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B4678/S35678",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 1,
+                    "alive_chance": 0.5,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Flood (CW)",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B345678/S46",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 1,
+                    "alive_chance": 0.125,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    }
+]
