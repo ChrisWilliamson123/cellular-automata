@@ -83,6 +83,7 @@ const updateMetadata = (metadata) => {
     iterations.textContent = metadata.iterations;
 
     updatePlayPauseButton(metadata.isPaused)
+    handleRewind(metadata.isRewinding);
 };
 
 // INITIALISATION
@@ -104,10 +105,39 @@ const performInitialisation = (initialisationData) => {
 const addAutomataClickEvents = () => {
     document.querySelectorAll("#automataList .list-group-item").forEach(item => {
         item.addEventListener("click", () => {
-            console.log('here');
             document.querySelectorAll("#automataList .list-group-item").forEach(i => i.classList.remove("active"));
             item.classList.add("active");
             ws.send(JSON.stringify({ type: "changeAutomata", name: item.textContent.trim() }));
         });
     });
+};
+
+// CHANGING SPEED
+document.querySelectorAll("#speedControls .btn").forEach(item => {
+    item.addEventListener("click", () => {
+        document.querySelectorAll("#speedControls .btn").forEach(i => i.classList.remove("btn-secondary"));
+        document.querySelectorAll("#speedControls .btn").forEach(i => i.classList.add("btn-outline-secondary"));
+        item.classList.replace("btn-outline-secondary", "btn-secondary");
+        ws.send(JSON.stringify({ type: "framerateMultiplier", multiplier: item.value }));
+    });
+});
+
+// REWIND
+const rewindBtn = document.getElementById("rewindBtn");
+const rewindIcon = document.getElementById("rewindIcon");
+
+const handleRewind = (isRewinding) => {
+    if (isRewinding) {
+        rewindIcon.classList.replace("bi-rewind", "bi-rewind-fill");
+        rewindBtn.classList.replace("btn-outline-secondary", "btn-secondary");
+    } else {
+        rewindIcon.classList.replace("bi-rewind-fill", "bi-rewind");
+        rewindBtn.classList.replace("btn-secondary", "btn-outline-secondary");
+    }
+};
+
+rewindBtn.onclick = () => {
+    ws.send(JSON.stringify({ type: "rewind" }));
+    const isRewinding = !rewindIcon.classList.contains("bi-rewind-fill");
+    handleRewind(isRewinding);
 };

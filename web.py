@@ -3,7 +3,7 @@ import json
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
 
-from automata.automaton import Automaton
+from automata.automaton import Automaton, AutomatonDelegate
 from automata.binary.builder import binary_automata_from_config
 from automata.brians_brain.builder import brians_brain_automata_from_config
 from automata.forest_fire.builder import forest_fire_automata_from_config
@@ -14,7 +14,9 @@ from automata.forest_fire.builder import forest_fire_automata_from_config
 #         'brians-brain': brians_brain_automata_from_config
 #     }
 
-class WebHandler:
+# class WebHandlerAutomatonDelegate(AutomatonDelegate):
+
+class WebHandler(AutomatonDelegate):
     AUTOMATON_SIZE = (300, 300)
     INITIAL_FRAMERATE = 30
 
@@ -26,6 +28,7 @@ class WebHandler:
 
         self.automata_names = [a['name'] for a in self.configs]
         self.automaton = binary_automata_from_config(self.configs[0], WebHandler.AUTOMATON_SIZE)()
+        self.automaton.delegate = self
 
         self.state = {
             "running": True,
@@ -34,14 +37,14 @@ class WebHandler:
             "configs": self.configs
         }
 
-        self.msg_task = asyncio.create_task(self.handle_messages())
-        self.run_task = asyncio.create_task(self.run_automaton())
+        self.msg_task = asyncio.create_task(self._handle_messages())
+        self.run_task = asyncio.create_task(self._run_automaton())
 
     async def begin(self):
-        await self.send_init_message()
+        await self._send_init_message()
         await asyncio.gather(self.msg_task, self.run_task)
 
-    async def send_init_message(self):
+    async def _send_init_message(self):
         init_message = {
             "type": "init",
             "data": {
@@ -51,26 +54,31 @@ class WebHandler:
         }
         await self.ws.send_json(init_message)
 
-    async def handle_messages(self):
+    async def _handle_messages(self):
         while True:
             msg = await self.ws.receive_text()
             msg = json.loads(msg)
             msgType = msg['type']
-            if msgType == "toggle":
+            if msgType == 'toggle':
                 self.automaton.toggle_pause()
-            elif msgType == "reset":
+            elif msgType == 'reset':
                 self.automaton.reset()
-            elif msgType == "framerate":
-                self.state["framerate"] = int(msg["framerate"])
-            elif msgType == "changeAutomata":
+            elif msgType == 'framerate':
+                self.state['framerate'] = int(msg['framerate'])
+            elif msgType == "framerateMultiplier":
+                self.state['framerate'] = int(WebHandler.INITIAL_FRAMERATE * float(msg['multiplier']))
+            elif msgType == 'changeAutomata':
                 config = list(filter(lambda c: c['name'] == msg['name'], self.configs))[0]
                 self.automaton = binary_automata_from_config(config, (300, 300))()
+            elif msgType == 'rewind':
+                self.automaton.reverse = not self.automaton.reverse
 
-    def build_metadata_message(self):
+    def _build_metadata_message(self):
         metadata = {
             "subtitle": self.automaton.subtitle(),
-            "iterations": self.automaton.iterations,
-            "isPaused": self.automaton.paused
+            "iterations": self.automaton.iteration_count,
+            "isPaused": self.automaton.paused,
+            "isRewinding": self.automaton.reverse
         }
 
         full_message = {
@@ -80,7 +88,7 @@ class WebHandler:
 
         return json.dumps(full_message)
 
-    async def run_automaton(self):
+    async def _run_automaton(self):
         while True:
             start = asyncio.get_event_loop().time()
 
@@ -90,11 +98,24 @@ class WebHandler:
                 frame = self.automaton.get_frame()
 
                 await self.ws.send_bytes(frame.tobytes())
-                await self.ws.send_text(self.build_metadata_message())
+                await self.ws.send_text(self._build_metadata_message())
 
             elapsed = asyncio.get_event_loop().time() - start
             delay = max(0, (1 / self.state["framerate"]) - elapsed)
             await asyncio.sleep(delay)
+
+    def did_change_rewind(self, isRewinding):
+        asyncio.ensure_future(
+            self.ws.send_json({
+                "type": "rewind",
+                "data": {
+                    "isRewinding": isRewinding
+                }
+            })
+        )
+
+    async def ws_send_json(self, json):
+        await self.ws.send_json(json)
 
 app = FastAPI()
 
