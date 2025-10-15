@@ -48,6 +48,9 @@ class BinaryAutomaton(Automaton):
     def debug_string(self):
         # return f'{self.bs_notation}, GS: {initial_size}, AC: {alive_chance:.2f}'
         return f'{self.bs_notation}'
+    
+    def subtitle(self):
+        return f'B/S Notation: {self.bs_notation}'
 
     def _parse_bs_rule(self, rule_str):
         """

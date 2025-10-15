@@ -28,6 +28,7 @@ app = FastAPI()
 async def automaton(ws: WebSocket):
     framerate = 60 # Frames per second
     running = True
+    sent_metadata = False
     rule = "Game of Life"
 
     await ws.accept()
@@ -45,6 +46,13 @@ async def automaton(ws: WebSocket):
                 framerate = int(msg["framerate"])
         except asyncio.TimeoutError:
             pass
+
+        if not sent_metadata:
+            await ws.send_text(json.dumps({
+                "type": "subtitle",
+                "data": aut.subtitle()
+            }))
+            sent_metadata = True
 
         if running:
             aut.iterate(0)

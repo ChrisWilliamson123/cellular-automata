@@ -37,23 +37,29 @@
             </main>
 
             <!-- Right sidebar -->
-            <aside class="col-md-2 bg-white border-start p-3">
-                <h5>Controls</h5>
-                <div class="d-grid gap-2 mb-3">
-                    <button id="toggle" class="btn btn-primary">Pause / Resume</button>
-                    <button id="reset" class="btn btn-primary">Reset</button>
-                    <select id="rule" class="form-select">
-                        <option>Game of Life</option>
-                        <option>HighLife</option>
-                        <option>Seeds</option>
-                    </select>
+            <aside class="col-md-2 bg-white border-start p-3 d-flex flex-column justify-content-between">
+                <div>
+                    <h5>Controls</h5>
+                    <div class="d-grid gap-2 mb-3">
+                        <button id="toggle" class="btn btn-primary">Pause / Resume</button>
+                        <button id="reset" class="btn btn-primary">Reset</button>
+                        <select id="rule" class="form-select">
+                            <option>Game of Life</option>
+                            <option>HighLife</option>
+                            <option>Seeds</option>
+                        </select>
+                    </div>
+
+                    <h6>Framerate</h6>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <input type="range" min="1" max="120" value="60" class="form-range flex-grow-1 me-2"
+                            id="framerateSlider">
+                        <span id="framerateValue" class="fw-bold">60</span><span class="ms-1">FPS</span>
+                    </div>
                 </div>
 
-                <h6>Framerate</h6>
-                <div class="d-flex align-items-center justify-content-between">
-                    <input type="range" min="1" max="120" value="60" class="form-range flex-grow-1 me-2"
-                        id="framerateSlider">
-                    <span id="framerateValue" class="fw-bold">60</span><span class="ms-1">FPS</span>
+                <div class="border-top pt-2 mt-3 text-start small text-muted">
+                    <span id="subtitle"></span>
                 </div>
             </aside>
         </div>

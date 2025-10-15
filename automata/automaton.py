@@ -49,6 +49,9 @@ class Automaton(ABC):
     def debug_string(self) -> str:
         pass
 
+    def subtitle(self) -> str:
+        ''
+
     def reset(self):
         master_grid = np.zeros(self.grid_generators[0].screen_size, dtype=np.int8)
         for g in self.grid_generators:

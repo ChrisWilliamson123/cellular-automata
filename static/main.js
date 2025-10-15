@@ -5,10 +5,20 @@ const canvas = document.getElementById("ca");
 const ctx = canvas.getContext("2d");
 
 ws.onmessage = (event) => {
-    const bytes = new Uint8ClampedArray(event.data);
-    const imgData = new ImageData(bytes, 300, 300);
-    ctx.putImageData(imgData, 0, 0);
+    if (typeof event.data === "string") {
+        // JSON messages will come through as strings
+        const message = JSON.parse(event.data);
+        if (message.type === "subtitle") {
+            document.getElementById("subtitle").textContent = message.data;
+        }
+    } else {
+        // Binary data (frame)
+        const bytes = new Uint8ClampedArray(event.data);
+        const imgData = new ImageData(bytes, 300, 300);
+        ctx.putImageData(imgData, 0, 0);
+    }
 };
+
 
 document.getElementById("toggle").onclick = () => {
     ws.send(JSON.stringify({ type: "toggle" }));
@@ -28,6 +38,10 @@ output.innerHTML = slider.value; // Display the default slider value
 slider.oninput = (e) => {
     output.innerHTML = e.target.value;
     ws.send(JSON.stringify({ type: "framerate", framerate: e.target.value }));
+}
+
+function updateBSNotation(notation) {
+    document.getElementById("bs-value").textContent = notation;
 }
 
 // Sidebar automata click selection
