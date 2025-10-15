@@ -7,6 +7,9 @@ from grid_generator.grid_generator import GridGenerator
 
 State = TypeVar('State', bound=np.generic, covariant=True)
 
+class AutomatonRewindError(Exception):
+    pass
+
 class Automaton(ABC):
     state: npt.NDArray[np.uint8]
 
@@ -42,11 +45,9 @@ class Automaton(ABC):
                 self.state = self.iterations[self.iteration_index - 1]
                 self.iteration_index -= 1
             else:
-                # At start of iterations
-                pass
+                raise AutomatonRewindError('At start of iterations')
         else:
-            # No iterations available
-            pass
+            raise AutomatonRewindError('No iterations available')
 
     @abstractmethod
     def get_next_state(self) -> npt.NDArray[np.uint8]:

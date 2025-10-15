@@ -5,6 +5,7 @@ from typing import List
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
 
+from automata.automaton import AutomatonRewindError
 from automata.binary.builder import binary_automata_from_config
 from automata.brians_brain.builder import brians_brain_automata_from_config
 from automata.forest_fire.builder import forest_fire_automata_from_config
@@ -17,22 +18,59 @@ from automata.forest_fire.builder import forest_fire_automata_from_config
 
 # class WebHandlerAutomatonDelegate(AutomatonDelegate):
 
-@dataclass
 class State:
-    is_paused = False
-    is_rewinding = False
-    framerate = 30
+    def __init__(self, on_change_fn):
+        self._is_paused = False
+        self._is_rewinding = False
+        self._framerate = 30
+        self.on_change_fn = on_change_fn
 
     @property
     def json(self):
-        {
+        return {
             "type": "state",
             "data": {
-                "isPaused": self.is_paused,
+                "isPaused": self._is_paused,
                 "isRewinding": self.is_rewinding,
-                "framerate": self.framerate
+                "framerate": self._framerate
             }
         }
+
+    # is_paused
+    @property
+    def is_paused(self):
+        return self._is_paused
+
+    @is_paused.setter
+    def is_paused(self, value: bool):
+        self._is_paused = value
+        self.on_change_fn(self.json)
+
+    def toggle_paused(self):
+        self.is_paused = not self._is_paused
+    
+    # is_rewinding
+    @property
+    def is_rewinding(self):
+        return self._is_rewinding
+
+    @is_rewinding.setter
+    def is_rewinding(self, value: bool):
+        self._is_rewinding = value
+        self.on_change_fn(self.json)
+    
+    def toggle_rewind(self):
+        self.is_rewinding = not self.is_rewinding
+
+    # framerate
+    @property
+    def framerate(self):
+        return self._framerate
+
+    @framerate.setter
+    def framerate(self, value: int):
+        self._framerate = value
+        self.on_change_fn(self.json)
 
 class WebHandler():
     AUTOMATON_SIZE = (300, 300)
@@ -47,14 +85,14 @@ class WebHandler():
         self.automata_names = [a['name'] for a in self.configs]
         self.automaton = binary_automata_from_config(self.configs[0], WebHandler.AUTOMATON_SIZE)()
 
-        self.state = State()
+        self.state = State(on_change_fn=lambda state: asyncio.ensure_future(self._send_state_message(state)))
 
         self.msg_task = asyncio.create_task(self._handle_messages())
         self.run_task = asyncio.create_task(self._run_automaton())
 
     async def begin(self):
         await self._send_init_message()
-        await self._send_state_message()
+        await self._send_state_message(self.state.json)
         await asyncio.gather(self.msg_task, self.run_task)
 
     async def _send_init_message(self):
@@ -66,8 +104,9 @@ class WebHandler():
         }
         await self.ws.send_json(init_message)
 
-    async def _send_state_message(self):
-        await self.ws.send_json(self.state.json)
+    async def _send_state_message(self, state):
+        print(f'Sending state: {state}')
+        await self.ws.send_json(state)
 
     async def _handle_messages(self):
         while True:
@@ -109,7 +148,11 @@ class WebHandler():
 
             if not self.state.is_paused:
                 if self.state.is_rewinding:
-                    self.automaton.rewind()
+                    try:
+                        self.automaton.rewind()
+                    except AutomatonRewindError:
+                        self.state.toggle_rewind()
+                        self.state.toggle_paused()
                 else:
                     self.automaton.iterate(0)
 
@@ -135,9 +178,6 @@ class WebHandler():
                 }
             })
         )
-
-    async def ws_send_json(self, json):
-        await self.ws.send_json(json)
 
 app = FastAPI()
 
