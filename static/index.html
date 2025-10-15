@@ -1,76 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cellular Automaton Viewer</title>
-    <style>
-        canvas {
-            width: auto;
-            height: 50vh;
-            image-rendering: pixelated;
-        }
 
-        button {
-            margin: 5px;
-        }
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        .slider {
-            width: 100px;
-        }
-    </style>
+    <!-- My CSS -->
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
-<body>
-    <canvas id="ca" width="300" height="300"></canvas>
-    <br>
-    <button id="toggle">Pause/Resume</button>
-    <button id="reset">Reset</button>
-    <select id="rule">
-        <option>Game of Life</option>
-        <option>HighLife</option>
-        <option>Seeds</option>
-    </select>
-    <br>
-    <div class="slidecontainer">
-        <input type="range" min="1" max="120" value="60" class="slider" id="framerateSlider">
-        <span id="framerateValue"></span>
-        <span>FPS</span>
+<body class="bg-light text-center">
+
+    <div class="container-fluid vh-100 d-flex flex-column">
+        <header class="py-3 mb-2 bg-dark text-white">
+            <h3 class="mb-0">Cellular Automaton Viewer</h3>
+        </header>
+
+        <div class="row flex-grow-1">
+            <!-- Left sidebar -->
+            <aside class="col-md-2 bg-white border-end p-3 d-flex flex-column">
+                <h5 class="text-start">Automata</h5>
+                <ul class="list-group flex-grow-1 mb-3" id="automataList">
+                    <li class="list-group-item active">Game of Life</li>
+                    <li class="list-group-item">HighLife</li>
+                    <li class="list-group-item">Seeds</li>
+                </ul>
+            </aside>
+
+            <!-- Center: Canvas -->
+            <main class="col-md-8 d-flex flex-column align-items-center justify-content-center bg-light">
+                <canvas id="ca" width="300" height="300" class="border border-2 shadow-sm rounded"></canvas>
+            </main>
+
+            <!-- Right sidebar -->
+            <aside class="col-md-2 bg-white border-start p-3">
+                <h5>Controls</h5>
+                <div class="d-grid gap-2 mb-3">
+                    <button id="toggle" class="btn btn-primary">Pause / Resume</button>
+                    <button id="reset" class="btn btn-primary">Reset</button>
+                    <select id="rule" class="form-select">
+                        <option>Game of Life</option>
+                        <option>HighLife</option>
+                        <option>Seeds</option>
+                    </select>
+                </div>
+
+                <h6>Framerate</h6>
+                <div class="d-flex align-items-center justify-content-between">
+                    <input type="range" min="1" max="120" value="60" class="form-range flex-grow-1 me-2"
+                        id="framerateSlider">
+                    <span id="framerateValue" class="fw-bold">60</span><span class="ms-1">FPS</span>
+                </div>
+            </aside>
+        </div>
     </div>
 
-    <script>
-        const ws = new WebSocket(`ws://${location.host}/ws`);
-        ws.binaryType = "arraybuffer";
+    <!-- Bootstrap JS (optional, for dynamic features) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        const canvas = document.getElementById("ca");
-        const ctx = canvas.getContext("2d");
-
-        ws.onmessage = (event) => {
-            const bytes = new Uint8ClampedArray(event.data);
-            const imgData = new ImageData(bytes, 300, 300);
-            ctx.putImageData(imgData, 0, 0);
-        };
-
-        document.getElementById("toggle").onclick = () => {
-            ws.send(JSON.stringify({ type: "toggle" }));
-        };
-
-        document.getElementById("reset").onclick = () => {
-            ws.send(JSON.stringify({ type: "reset" }));
-        };
-
-        document.getElementById("rule").onchange = (e) => {
-            ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
-        };
-
-        const slider = document.getElementById("framerateSlider");
-        const output = document.getElementById("framerateValue");
-        output.innerHTML = slider.value; // Display the default slider value
-        slider.oninput = (e) => {
-            output.innerHTML = e.target.value;
-            ws.send(JSON.stringify({ type: "framerate", framerate: e.target.value }));
-        }
-    </script>
+    <!--- My JS -->
+    <script src="./main.js"></script>
 </body>
 
 </html>
