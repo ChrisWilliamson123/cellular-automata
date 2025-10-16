@@ -22,7 +22,7 @@ class State:
     def __init__(self, on_change_fn):
         self._is_paused = False
         self._is_rewinding = False
-        self._framerate = 30
+        self._framerate_multiplier: float = 1
         self.on_change_fn = on_change_fn
 
     @property
@@ -30,9 +30,9 @@ class State:
         return {
             "type": "state",
             "data": {
-                "isPaused": self._is_paused,
+                "isPaused": self.is_paused,
                 "isRewinding": self.is_rewinding,
-                "framerate": self._framerate
+                "framerateMultiplier": self.framerate_multiplier
             }
         }
 
@@ -64,12 +64,12 @@ class State:
 
     # framerate
     @property
-    def framerate(self):
-        return self._framerate
+    def framerate_multiplier(self):
+        return self._framerate_multiplier
 
-    @framerate.setter
-    def framerate(self, value: int):
-        self._framerate = value
+    @framerate_multiplier.setter
+    def framerate_multiplier(self, value: float):
+        self._framerate_multiplier = value
         self.on_change_fn(self.json)
 
 class WebHandler():
@@ -89,6 +89,10 @@ class WebHandler():
 
         self.msg_task = asyncio.create_task(self._handle_messages())
         self.run_task = asyncio.create_task(self._run_automaton())
+
+    @property
+    def framerate(self):
+        return self.state.framerate_multiplier * WebHandler.INITIAL_FRAMERATE
 
     async def begin(self):
         await self._send_init_message()
@@ -118,10 +122,10 @@ class WebHandler():
             elif msgType == 'reset':
                 self.automaton.reset()
                 await self._render_automaton()
-            elif msgType == 'framerate':
-                self.state.framerate = int(msg['framerate'])
+            # elif msgType == 'framerate':
+            #     self.state.framerate = int(msg['framerate'])
             elif msgType == "framerateMultiplier":
-                self.state.framerate = int(WebHandler.INITIAL_FRAMERATE * float(msg['multiplier']))
+                self.state.framerate_multiplier = float(float(msg['multiplier']))
             elif msgType == 'changeAutomata':
                 config = list(filter(lambda c: c['name'] == msg['name'], self.configs))[0]
                 self.automaton = binary_automata_from_config(config, (300, 300))()
@@ -160,7 +164,7 @@ class WebHandler():
             await self._render_automaton()
 
             elapsed = asyncio.get_event_loop().time() - start
-            delay = max(0, (1 / self.state.framerate) - elapsed)
+            delay = max(0, (1 / self.framerate) - elapsed)
             await asyncio.sleep(delay)
 
     async def _render_automaton(self):

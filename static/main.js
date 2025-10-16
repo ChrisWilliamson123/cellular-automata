@@ -29,6 +29,7 @@ ws.onmessage = (event) => {
 const updateState = (state) => {
     updatePlayPauseButton(state.isPaused);
     updateRewindButton(state.isRewinding);
+    updateFramerateMultiplier(state.framerateMultiplier);
 };
 
 // document.getElementById("rule").onchange = (e) => {
@@ -47,8 +48,8 @@ framerateSlider.onchange = (e) => {
 
 // When we want to update the framerate slider and text based on socket event
 const updateFramerateContent = (framerate) => {
-    document.getElementById("framerateValue").textContent = framerate;
-    document.getElementById("framerateSlider").value = framerate;
+    // document.getElementById("framerateValue").textContent = framerate;
+    // document.getElementById("framerateSlider").value = framerate;
 };
 
 // PLAY/PAUSE
@@ -129,6 +130,18 @@ document.querySelectorAll("#speedControls .btn").forEach(item => {
         ws.send(JSON.stringify({ type: "framerateMultiplier", multiplier: item.value }));
     });
 });
+
+const updateFramerateMultiplier = (multiplier) => {
+    document.querySelectorAll("#speedControls .btn").forEach(item => {
+        item.classList.remove("btn-secondary");
+        item.classList.remove("btn-outline-secondary");
+        if (item.value == multiplier) {
+            item.classList.add("btn-secondary");
+        } else {
+            item.classList.add("btn-outline-secondary");
+        }
+    })
+};
 
 // REWIND
 const rewindBtn = document.getElementById("rewindBtn");
