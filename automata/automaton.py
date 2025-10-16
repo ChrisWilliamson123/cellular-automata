@@ -3,6 +3,8 @@ import numpy as np
 import numpy.typing as npt
 from typing import List, Tuple, TypeVar
 
+import pygame
+
 from grid_generator.grid_generator import GridGenerator
 
 State = TypeVar('State', bound=np.generic, covariant=True)
@@ -54,11 +56,11 @@ class Automaton(ABC):
         pass
 
     @abstractmethod
-    def render(self, surface):
+    def render(self, surface: pygame.Surface):
         pass
 
     @abstractmethod
-    def get_frame(self):
+    def get_frame(self) -> npt.NDArray[np.uint8]:
         pass
 
     def should_reset(self) -> bool:
