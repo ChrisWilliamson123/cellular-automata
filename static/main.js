@@ -8,7 +8,7 @@ ws.onmessage = (event) => {
     if (typeof event.data === "string") {
         // JSON messages will come through as strings
         const message = JSON.parse(event.data);
-        if (message.type === "metadata") {
+        if (message.type === "automatonMetadata") {
             const metadata = message.data;
             updateMetadata(metadata);
         } else if (message.type === "init") {
@@ -116,7 +116,7 @@ const addAutomataClickEvents = () => {
         item.addEventListener("click", () => {
             document.querySelectorAll("#automataList .list-group-item").forEach(i => i.classList.remove("active"));
             item.classList.add("active");
-            ws.send(JSON.stringify({ type: "changeAutomata", data: item.textContent.trim() }));
+            ws.send(JSON.stringify({ type: "changeAutomaton", data: item.textContent.trim() }));
         });
     });
 };
@@ -127,7 +127,7 @@ document.querySelectorAll("#speedControls .btn").forEach(item => {
         document.querySelectorAll("#speedControls .btn").forEach(i => i.classList.remove("btn-secondary"));
         document.querySelectorAll("#speedControls .btn").forEach(i => i.classList.add("btn-outline-secondary"));
         item.classList.replace("btn-outline-secondary", "btn-secondary");
-        ws.send(JSON.stringify({ type: "framerateMultiplier", data: item.value }));
+        ws.send(JSON.stringify({ type: "changeFramerateMultiplier", data: item.value }));
     });
 });
 
@@ -158,7 +158,7 @@ const updateRewindButton = (isRewinding) => {
 };
 
 rewindBtn.onclick = () => {
-    ws.send(JSON.stringify({ type: "rewind" }));
+    ws.send(JSON.stringify({ type: "toggleRewind" }));
     const isRewinding = !rewindIcon.classList.contains("bi-rewind-fill");
     updateRewindButton(isRewinding);
 };

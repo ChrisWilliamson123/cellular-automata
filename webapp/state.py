@@ -1,6 +1,6 @@
 from typing import Callable
 
-class State:
+class RunnerState:
     def __init__(self, on_change_fn: Callable[[dict], None]):
         self._is_paused = False
         self._is_rewinding = False
@@ -10,12 +10,9 @@ class State:
     @property
     def json(self):
         return {
-            "type": "state",
-            "data": {
-                "isPaused": self.is_paused,
-                "isRewinding": self.is_rewinding,
-                "framerateMultiplier": self.framerate_multiplier
-            }
+            "isPaused": self.is_paused,
+            "isRewinding": self.is_rewinding,
+            "framerateMultiplier": self.framerate_multiplier
         }
 
     # is_paused

@@ -9,7 +9,7 @@ from automata.automaton import AutomatonRewindError
 from automata.binary.builder import binary_automata_from_config
 from automata.brians_brain.builder import brians_brain_automata_from_config
 from automata.forest_fire.builder import forest_fire_automata_from_config
-from webapp.state import State
+from webapp.state import RunnerState
 
 # builder_map = {
 #         'binary': binary_automata_from_config,
@@ -32,7 +32,7 @@ class WebHandler():
         self.automata_names: List[str] = [a['name'] for a in self.configs]
         self.automaton = binary_automata_from_config(self.configs[0], WebHandler.AUTOMATON_SIZE)()
 
-        self.state = State(on_change_fn=lambda state: asyncio.ensure_future(self._send_state_message(state)))
+        self.state = RunnerState(on_change_fn=lambda state: asyncio.ensure_future(self._send_state_message(state)))
 
         self.msg_task = asyncio.create_task(self._handle_messages())
         self.run_task = asyncio.create_task(self._run_automaton())
