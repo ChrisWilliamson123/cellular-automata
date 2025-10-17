@@ -33,12 +33,67 @@ const updateState = (state) => {
     updateFramerateMultiplier(state.framerateMultiplier);
 };
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16)
+    ] : null;
+}
+
+const areColoursEqual = (incomingColours) => {
+    const coloursContainer = document.getElementById("coloursContainer");
+    const pickers = Array.from(coloursContainer.getElementsByClassName("colourPicker"));
+    const colours = pickers.map((p) => {
+        const hexValue = p.value;
+        const rgb = hexToRgb(hexValue);
+        return rgb;
+    });
+    return JSON.stringify(colours) === JSON.stringify(incomingColours);
+}
+
 // Updates to perform as a result of an automaton metadata message
 const updateMetadata = (metadata) => {
     updateSubtitle(metadata.subtitle);
     updateIterations(metadata.iterationIndex, metadata.totalIterations);
     updateRandomBinaryElements(metadata.isRandomBinaryAutomaton);
+
+    // console.log(metadata.colours);
+    const coloursContainer = document.getElementById("coloursContainer");
+    if (!areColoursEqual(metadata.colours)) {
+        coloursContainer.innerHTML = '';
+        metadata.colours.forEach((colour, index) => {
+            coloursContainer.innerHTML += `<input type="color" value="${rgbToHex(colour[0], colour[1], colour[2])}" id="colour${index}" class="colourPicker" />`
+        });
+    }
+
+    document.querySelectorAll(".colourPicker").forEach((e) => {
+        e.onchange = (e) => {
+            // console.log(hexToRgb(e.target.value));
+            sendColoursUpdate();
+        };
+    })
 };
+
+const sendColoursUpdate = () => {
+    const coloursContainer = document.getElementById("coloursContainer");
+    let colours = [];
+    coloursContainer.querySelectorAll('.colourPicker').forEach((e) => {
+        const rgb = hexToRgb(e.value);
+        colours.push(rgb)
+    });
+    ws.send(JSON.stringify({ type: "changeColours", data: colours }));
+}
 
 const updateRandomBinaryElements = (isRandomBinaryAutomaton) => {
     const randomBinaryControlsContainer = document.getElementById('randomBinaryControlsContainer');

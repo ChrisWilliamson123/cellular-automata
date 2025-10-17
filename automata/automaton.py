@@ -21,6 +21,7 @@ class Automaton(ABC):
         self.iteration_index = 0
         self.total_iterations = 0
         self.iterations = []
+        self.colours = self.default_colours
         self.reset()
 
     def iterate(self, dt):
@@ -88,3 +89,11 @@ class Automaton(ABC):
 
     def cleanup(self):
         pass
+
+    @property
+    @abstractmethod
+    def default_colours(self) -> npt.NDArray[np.uint8]:
+        pass
+
+    def change_colours(self, colours):
+        self.colours = np.array(colours, dtype=np.uint8)

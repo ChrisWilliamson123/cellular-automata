@@ -9,18 +9,13 @@ from grid_generator.grid_generator import GridGenerator
 from helpers import random_bs_notation
 
 class BinaryAutomaton(Automaton):
-    COLOURS = np.array([
-        (0, 0, 0),       # Dead
-        (255, 255, 255)  # Alive
-    ], dtype=np.uint8)
-
     def __init__(self, grid_generators: List[BinaryGridGenerator], name: str, bs_notation: str, screen_size: Tuple[int, int]):
-        super().__init__(grid_generators, name)
         self.bs_notation = bs_notation
         self.birth_rules, self.survival_rules = self._parse_bs_rule(bs_notation)
         self.birth_rules = np.array(self.birth_rules)
         self.survival_rules = np.array(self.survival_rules)
         self.screen_size = screen_size
+        super().__init__(grid_generators, name)
 
     def get_next_state(self, _) -> npt.NDArray[np.int8]:
         neighbour_counts = sum(
@@ -38,13 +33,22 @@ class BinaryAutomaton(Automaton):
         surface.blit(grid_surface, (0, 0))
 
     def get_frame(self):
-        # Create an RGBA image with white for alive cells and black for dead cells
-        rgba = np.zeros((self.state.shape[0], self.state.shape[1], 4), dtype=np.uint8)
-        rgba[..., 0] = self.state * BinaryAutomaton.COLOURS[1][0] # Red
-        rgba[..., 1] = self.state * BinaryAutomaton.COLOURS[1][1] # Green
-        rgba[..., 2] = self.state * BinaryAutomaton.COLOURS[1][2] # Blue
-        rgba[..., 3] = 255                                        # Alpha channel always maxed
+        # self.state: 2D array of ints (e.g., 0..N-1)
+        # self.colours: list or array of shape (N, 4) or (N, 3) with RGB or RGBA values
+
+        # Ensure colours is a NumPy array for indexing
+        colours = np.array(self.colours, dtype=np.uint8)
+
+        # Use advanced indexing to map each cell value to its RGBA colour
+        rgba = colours[self.state]
+
+        # If your colours only contain RGB values, add an alpha channel
+        if rgba.shape[-1] == 3:
+            alpha = np.full((*self.state.shape, 1), 255, dtype=np.uint8)
+            rgba = np.concatenate([rgba, alpha], axis=-1)
+
         return rgba
+
 
     def debug_string(self):
         # return f'{self.bs_notation}, GS: {initial_size}, AC: {alive_chance:.2f}'
@@ -74,6 +78,13 @@ class BinaryAutomaton(Automaton):
         survival = [int(n) for n in s_part[1:] if n.isdigit()]
 
         return birth, survival
+    
+    @property
+    def default_colours(self) -> npt.NDArray[np.uint8]:
+        return np.array([
+            (0, 0, 0),       # Dead
+            (255, 255, 255)  # Alive
+        ], dtype=np.uint8)
 
 class RandomBinaryAutomaton(BinaryAutomaton):
     def __init__(self, grid_generators: List[BinaryGridGenerator], name: str, screen_size: Tuple[int, int]):

@@ -75,7 +75,8 @@ class WebAutomataRunner():
             "subtitle": self.automaton.subtitle(),
             "totalIterations": self.automaton.total_iterations,
             "iterationIndex": self.automaton.iteration_index,
-            "isRandomBinaryAutomaton": isinstance(self.automaton, RandomBinaryAutomaton)
+            "isRandomBinaryAutomaton": isinstance(self.automaton, RandomBinaryAutomaton),
+            "colours": self.automaton.colours.tolist()
         }
 
         await self.message_sender.send_message('automatonMetadata', metadata)
@@ -108,3 +109,6 @@ class WebAutomataRunner():
     def submit_notation(self, notation):
         if isinstance(self.automaton, RandomBinaryAutomaton):
             self.automaton.submit_notation(notation)
+    
+    def change_colours(self, colours):
+        self.automaton.change_colours(colours)
