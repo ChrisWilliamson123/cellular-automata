@@ -14,6 +14,7 @@ class MessageReceiver():
         CHANGE_AUTOMATON = 'changeAutomaton'
         TOGGLE_REWIND = 'toggleRewind'
         RANDOMISE_NOTATION = 'randomiseNotation'
+        SUBMIT_NOTATION = 'submitNotation'
 
     def __init__(self, ws: WebSocket, runner: WebAutomataRunner):
         self.ws = ws
@@ -39,3 +40,5 @@ class MessageReceiver():
                 self.runner.toggle_rewind()
             elif type == MessageReceiver.MessageType.RANDOMISE_NOTATION:
                 self.runner.randomise_notation()
+            elif type == MessageReceiver.MessageType.SUBMIT_NOTATION:
+                self.runner.submit_notation(data)

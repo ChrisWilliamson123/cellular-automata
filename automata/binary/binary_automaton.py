@@ -80,16 +80,17 @@ class RandomBinaryAutomaton(BinaryAutomaton):
         bs_notation = random_bs_notation()
         super().__init__(grid_generators, name, bs_notation, screen_size)
 
-    # def reset(self):
-    #     self.bs_notation = random_bs_notation()
-    #     self.birth_rules, self.survival_rules = self._parse_bs_rule(self.bs_notation)
-    #     self.birth_rules = np.array(self.birth_rules)
-    #     self.survival_rules = np.array(self.survival_rules)
-    #     super().reset()
-
     def randomise_notation(self):
         self.bs_notation = random_bs_notation()
+        self._set_rules()
+        self.reset()
+
+    def submit_notation(self, notation):
+        self.bs_notation = notation
+        self._set_rules()
+        self.reset()
+
+    def _set_rules(self):
         self.birth_rules, self.survival_rules = self._parse_bs_rule(self.bs_notation)
         self.birth_rules = np.array(self.birth_rules)
         self.survival_rules = np.array(self.survival_rules)
-        self.reset()

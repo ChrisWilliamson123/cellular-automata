@@ -104,3 +104,7 @@ class WebAutomataRunner():
     def randomise_notation(self):
         if isinstance(self.automaton, RandomBinaryAutomaton):
             self.automaton.randomise_notation()
+
+    def submit_notation(self, notation):
+        if isinstance(self.automaton, RandomBinaryAutomaton):
+            self.automaton.submit_notation(notation)

@@ -38,8 +38,6 @@ const updateMetadata = (metadata) => {
     updateSubtitle(metadata.subtitle);
     updateIterations(metadata.iterationIndex, metadata.totalIterations);
     updateRandomBinaryElements(metadata.isRandomBinaryAutomaton);
-
-    // bsNotationSubmitBtn
 };
 
 const updateRandomBinaryElements = (isRandomBinaryAutomaton) => {
@@ -168,3 +166,10 @@ rewindBtn.onclick = () => {
 document.getElementById("randomiseNotationBtn").onclick = () => {
     ws.send(JSON.stringify({ type: "randomiseNotation" }));
 }
+
+// USER ENTERED NOTATION
+document.getElementById("bsNotationForm").onsubmit = (e) => {
+    e.preventDefault();
+    const notation = document.getElementById("bsNotationInput").value;
+    ws.send(JSON.stringify({ type: "submitNotation", data: notation }));
+};
