@@ -35,35 +35,39 @@
 
             <!-- Center: Canvas -->
             <main class="col-md-8 d-flex flex-column align-items-center bg-light">
-                <div class="d-flex flex-column align-items-start">
+                <div class="d-flex flex-column">
                     <canvas id="ca" width="300" height="300" class="border border-2 shadow-sm rounded"></canvas>
-                    <div class="mt-1 d-flex gap-2">
-                        <button id="playPauseBtn" class="btn btn-outline-secondary">
-                            <i id="playPauseIcon" class="bi bi-pause-fill"></i>
-                        </button>
-                        <button id="resetBtn" class="btn btn-outline-secondary">
-                            <i id="resetIcon" class="bi bi-arrow-clockwise"></i>
-                        </button>
-                        <button id="rewindBtn" class="btn btn-outline-secondary">
-                            <i id="rewindIcon" class="bi bi-rewind"></i>
-                        </button>
-                        <div id="speedControls" class="">
-                            <button class="btn btn-outline-secondary" value="0.5">
-                                <span>0.5x</span>
+                    <div class="mt-1 d-flex justify-content-between">
+                        <div class="d-flex gap-2">
+                            <button id="playPauseBtn" class="btn btn-outline-secondary">
+                                <i id="playPauseIcon" class="bi bi-pause-fill"></i>
                             </button>
-                            <button class="btn btn-secondary" value="1">
-                                <span>1x</span>
+                            <button id="resetBtn" class="btn btn-outline-secondary">
+                                <i id="resetIcon" class="bi bi-arrow-clockwise"></i>
                             </button>
-                            <button class="btn btn-outline-secondary" value="2">
-                                <span>2x</span>
+                            <button id="rewindBtn" class="btn btn-outline-secondary">
+                                <i id="rewindIcon" class="bi bi-rewind"></i>
                             </button>
-                            <button class="btn btn-outline-secondary" value="4">
-                                <span>4x</span>
+                            <div id="speedControls" class="gap-1">
+                                <button class="btn btn-outline-secondary" value="0.5">
+                                    <span>0.5x</span>
+                                </button>
+                                <button class="btn btn-secondary" value="1">
+                                    <span>1x</span>
+                                </button>
+                                <button class="btn btn-outline-secondary" value="2">
+                                    <span>2x</span>
+                                </button>
+                                <button class="btn btn-outline-secondary" value="4">
+                                    <span>4x</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <button id="randomiseNotationBtn" class="btn btn-outline-secondary">
+                                <span>Randomise Notation</span>
                             </button>
                         </div>
-                        <button id="randomiseNotationBtn" class="btn btn-outline-secondary">
-                            <span>Randomise Notation</span>
-                        </button>
                     </div>
                 </div>
             </main>
