@@ -37,11 +37,20 @@ const updateState = (state) => {
 const updateMetadata = (metadata) => {
     updateSubtitle(metadata.subtitle);
     updateIterations(metadata.iterationIndex, metadata.totalIterations);
+
+    if (metadata.isRandomBinaryAutomaton) {
+        document.getElementById('randomiseNotationBtn').hidden = false;
+    } else {
+        document.getElementById('randomiseNotationBtn').hidden = true;
+    }
 };
 
 const updateSubtitle = (subtitle) => {
     const subtitleSpan = document.getElementById("subtitle");
-    subtitleSpan.textContent = subtitle;
+    const currentText = subtitleSpan.textContent;
+    if (currentText !== subtitle) {
+        subtitleSpan.textContent = subtitle;
+    }
 };
 
 const updateIterations = (iterationIndex, totalIterations) => {
@@ -148,3 +157,8 @@ rewindBtn.onclick = () => {
     const isRewinding = !rewindIcon.classList.contains("bi-rewind-fill");
     updateRewindButton(isRewinding);
 };
+
+// RANDOMISE NOTATION
+document.getElementById("randomiseNotationBtn").onclick = () => {
+    ws.send(JSON.stringify({ type: "randomiseNotation" }));
+}

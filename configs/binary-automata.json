@@ -133,5 +133,37 @@
                 }
             ]
         }
+    },
+    {
+        "name": "Explosion (CW)",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B3467/S0135678",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.05,
+                    "alive_chance": 0.5,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Random",
+        "type": "binary-random",
+        "config": {
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.1,
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        }
     }
 ]

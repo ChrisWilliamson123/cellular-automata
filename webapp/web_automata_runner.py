@@ -5,7 +5,8 @@ from fastapi import WebSocket
 from typing import List
 
 from automata.automaton import AutomatonRewindError
-from automata.binary.builder import binary_automata_from_config
+from automata.binary.binary_automaton import RandomBinaryAutomaton
+from automata.binary.builder import binary_automata_from_config, random_binary_automaton_from_config
 from webapp.message_sender import MessageSender
 from webapp.state import RunnerState
 
@@ -55,7 +56,10 @@ class WebAutomataRunner():
 
     def _select_automaton(self, automaton_name):
         config = list(filter(lambda c: c['name'] == automaton_name, self.configs))[0]
-        self.automaton = binary_automata_from_config(config, WebAutomataRunner.AUTOMATON_SIZE)()
+        if config['type'] == 'binary':
+            self.automaton = binary_automata_from_config(config, WebAutomataRunner.AUTOMATON_SIZE)()
+        elif config['type'] == 'binary-random':
+            self.automaton = random_binary_automaton_from_config(config, WebAutomataRunner.AUTOMATON_SIZE)()
 
     async def _send_init_message(self):
         """Sends the automata names and initial render of the selected automaton"""
@@ -70,7 +74,8 @@ class WebAutomataRunner():
         metadata = {
             "subtitle": self.automaton.subtitle(),
             "totalIterations": self.automaton.total_iterations,
-            "iterationIndex": self.automaton.iteration_index
+            "iterationIndex": self.automaton.iteration_index,
+            "isRandomBinaryAutomaton": isinstance(self.automaton, RandomBinaryAutomaton)
         }
 
         await self.message_sender.send_message('automatonMetadata', metadata)
@@ -95,3 +100,7 @@ class WebAutomataRunner():
 
     def toggle_rewind(self):
         self.state.toggle_rewind()
+
+    def randomise_notation(self):
+        if isinstance(self.automaton, RandomBinaryAutomaton):
+            self.automaton.randomise_notation()
