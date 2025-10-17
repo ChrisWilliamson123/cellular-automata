@@ -26,30 +26,27 @@ ws.onmessage = (event) => {
     }
 };
 
+// Updates to perform as a result of a state message
 const updateState = (state) => {
     updatePlayPauseButton(state.isPaused);
     updateRewindButton(state.isRewinding);
     updateFramerateMultiplier(state.framerateMultiplier);
 };
 
-// document.getElementById("rule").onchange = (e) => {
-//     ws.send(JSON.stringify({ type: "rule", rule: e.target.value }));
-// };
-
-// FRAMERATE HANDLING
-const framerateSlider = document.getElementById("framerateSlider");
-const framerateText = document.getElementById("framerateValue");
-
-// When the user changes the framerate value
-framerateSlider.onchange = (e) => {
-    framerateText.innerHTML = e.target.value;
-    ws.send(JSON.stringify({ type: "framerate", framerate: e.target.value }));
+// Updates to perform as a result of an automaton metadata message
+const updateMetadata = (metadata) => {
+    updateSubtitle(metadata.subtitle);
+    updateIterations(metadata.iterationIndex, metadata.totalIterations);
 };
 
-// When we want to update the framerate slider and text based on socket event
-const updateFramerateContent = (framerate) => {
-    // document.getElementById("framerateValue").textContent = framerate;
-    // document.getElementById("framerateSlider").value = framerate;
+const updateSubtitle = (subtitle) => {
+    const subtitleSpan = document.getElementById("subtitle");
+    subtitleSpan.textContent = subtitle;
+};
+
+const updateIterations = (iterationIndex, totalIterations) => {
+    const iterationsSpan = document.getElementById("iterations");
+    iterationsSpan.textContent = `${iterationIndex + 1} / ${totalIterations}`;
 };
 
 // PLAY/PAUSE
@@ -83,22 +80,10 @@ resetBtn.onclick = () => {
     ws.send(JSON.stringify({ type: "reset" }));
 };
 
-// METADATA
-const updateMetadata = (metadata) => {
-    const subtitle = document.getElementById("subtitle");
-    subtitle.textContent = metadata.subtitle;
-
-    const iterations = document.getElementById("iterations");
-    iterations.textContent = `${metadata.iterationIndex + 1} / ${metadata.totalIterations}`;
-
-    // updatePlayPauseButton(metadata.isPaused)
-    // handleRewind(metadata.isRewinding);
-};
 
 // INITIALISATION
-const automataList = document.getElementById('automataList');
 const performInitialisation = (initialisationData) => {
-    // updateFramerateContent(initialisationData.framerate);
+    const automataList = document.getElementById('automataList');
 
     automataList.innerHTML = initialisationData.automataNames.map((name, index) => {
         if (index == 0) {
@@ -107,6 +92,7 @@ const performInitialisation = (initialisationData) => {
             return `<li class="list-group-item automata-option">${name}</li>`
         }
     }).join('');
+
     addAutomataClickEvents();
 };
 
