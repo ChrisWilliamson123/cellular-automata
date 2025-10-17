@@ -37,11 +37,17 @@ const updateState = (state) => {
 const updateMetadata = (metadata) => {
     updateSubtitle(metadata.subtitle);
     updateIterations(metadata.iterationIndex, metadata.totalIterations);
+    updateRandomBinaryElements(metadata.isRandomBinaryAutomaton);
 
-    if (metadata.isRandomBinaryAutomaton) {
-        document.getElementById('randomiseNotationBtn').hidden = false;
+    // bsNotationSubmitBtn
+};
+
+const updateRandomBinaryElements = (isRandomBinaryAutomaton) => {
+    const randomBinaryControlsContainer = document.getElementById('randomBinaryControlsContainer');
+    if (isRandomBinaryAutomaton) {
+        randomBinaryControlsContainer.classList.replace('d-none', 'd-flex');
     } else {
-        document.getElementById('randomiseNotationBtn').hidden = true;
+        randomBinaryControlsContainer.classList.replace('d-flex', 'd-none');
     }
 };
 

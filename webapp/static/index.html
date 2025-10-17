@@ -63,18 +63,30 @@
                                 </button>
                             </div>
                         </div>
-                        <div>
+                        <!-- <div>
                             <button id="randomiseNotationBtn" class="btn btn-outline-secondary">
                                 <span>Randomise Notation</span>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </main>
 
             <!-- Right sidebar -->
             <aside class="col-md-2 bg-white border-start p-3 d-flex flex-column justify-content-between">
-                <div>
+                <div class="d-flex flex-column align-items-stretch gap-2">
+                    <h5>Controls</h5>
+                    <div id="randomBinaryControlsContainer" class="d-none flex-column gap-2">
+                        <button id="randomiseNotationBtn" class="btn btn-primary">
+                            <span>Randomise B/S</span>
+                        </button>
+                        <div class="d-flex align-items-stretch justify-content-between">
+                            <input type="text" id="bsNotationInput" placeholder="B3/S23" />
+                            <button id="bsNotationSubmitBtn" class="btn btn-primary">
+                                <i id="bsNotationSubmitIcon" class="bi bi-play-fill"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="border-top pt-2 mt-3 text-start small text-muted d-flex justify-content-between">
