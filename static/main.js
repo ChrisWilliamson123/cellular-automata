@@ -116,7 +116,7 @@ const addAutomataClickEvents = () => {
         item.addEventListener("click", () => {
             document.querySelectorAll("#automataList .list-group-item").forEach(i => i.classList.remove("active"));
             item.classList.add("active");
-            ws.send(JSON.stringify({ type: "changeAutomata", name: item.textContent.trim() }));
+            ws.send(JSON.stringify({ type: "changeAutomata", data: item.textContent.trim() }));
         });
     });
 };
@@ -127,7 +127,7 @@ document.querySelectorAll("#speedControls .btn").forEach(item => {
         document.querySelectorAll("#speedControls .btn").forEach(i => i.classList.remove("btn-secondary"));
         document.querySelectorAll("#speedControls .btn").forEach(i => i.classList.add("btn-outline-secondary"));
         item.classList.replace("btn-outline-secondary", "btn-secondary");
-        ws.send(JSON.stringify({ type: "framerateMultiplier", multiplier: item.value }));
+        ws.send(JSON.stringify({ type: "framerateMultiplier", data: item.value }));
     });
 });
 

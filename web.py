@@ -1,6 +1,7 @@
 import asyncio
+from dataclasses import dataclass
 import json
-from typing import List
+from typing import Any, List, Self, TypeVar
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
 
@@ -16,7 +17,7 @@ from webapp.state import State
 #         'brians-brain': brians_brain_automata_from_config
 #     }
 
-# class WebHandlerAutomatonDelegate(AutomatonDelegate):
+# class WebHaj(AutomatonDelegate):
 
 class WebHandler():
     AUTOMATON_SIZE = (300, 300)
@@ -61,20 +62,23 @@ class WebHandler():
         while True:
             msg = await self.ws.receive_text()
             msg = json.loads(msg)
-            msgType = msg['type']
-            if msgType == 'togglePause':
+
+            type: str = msg['type']
+            data: Any = msg.get('data', None)
+
+            if type == 'togglePause':
                 self.state.is_paused = not self.state.is_paused
-            elif msgType == 'reset':
+            elif type == 'reset':
                 self.automaton.reset()
                 await self._render_automaton()
             # elif msgType == 'framerate':
             #     self.state.framerate = int(msg['framerate'])
-            elif msgType == "framerateMultiplier":
-                self.state.framerate_multiplier = float(float(msg['multiplier']))
-            elif msgType == 'changeAutomata':
-                config = list(filter(lambda c: c['name'] == msg['name'], self.configs))[0]
+            elif type == "framerateMultiplier":
+                self.state.framerate_multiplier = float(data)
+            elif type == 'changeAutomata':
+                config = list(filter(lambda c: c['name'] == data, self.configs))[0]
                 self.automaton = binary_automata_from_config(config, (300, 300))()
-            elif msgType == 'rewind':
+            elif type == 'rewind':
                 self.state.is_rewinding = not self.state.is_rewinding
 
     def _build_metadata_message(self):
