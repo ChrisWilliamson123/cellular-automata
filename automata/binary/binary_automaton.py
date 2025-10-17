@@ -55,7 +55,7 @@ class BinaryAutomaton(Automaton):
         return f'{self.bs_notation}'
     
     def subtitle(self):
-        return f'B/S Notation: {self.bs_notation}'
+        return f'{self.bs_notation}'
 
     def _parse_bs_rule(self, rule_str):
         """

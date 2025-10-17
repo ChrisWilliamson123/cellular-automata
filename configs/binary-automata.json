@@ -152,6 +152,31 @@
         }
     },
     {
+        "name": "Fractal (CW)",
+        "type": "binary",
+        "config": {
+            "bs_notation": "B15/S012345678",
+            "grid_generators": [
+                {
+                    "initial_size_percentage": 0.01,
+                    "alive_chance": 1,
+                    "center": {
+                        "x": 0.1,
+                        "y": 0.1
+                    }
+                },
+                {
+                    "initial_size_percentage": 0.01,
+                    "alive_chance": 1,
+                    "center": {
+                        "x": 0.9,
+                        "y": 0.9
+                    }
+                }
+            ]
+        }
+    },
+    {
         "name": "Random",
         "type": "binary-random",
         "config": {
