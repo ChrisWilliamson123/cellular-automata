@@ -1,14 +1,12 @@
 import asyncio
-from enum import StrEnum
 import json
 
-from fastapi import FastAPI, WebSocket
-from typing import Any, List
-
-from fastapi.staticfiles import StaticFiles
+from fastapi import WebSocket
+from typing import List
 
 from automata.automaton import AutomatonRewindError
 from automata.binary.builder import binary_automata_from_config
+from webapp.message_sender import MessageSender
 from webapp.state import RunnerState
 
 class WebAutomataRunner():
@@ -97,57 +95,3 @@ class WebAutomataRunner():
 
     def toggle_rewind(self):
         self.state.toggle_rewind()
-
-class MessageReceiver():
-    class MessageType(StrEnum):
-        TOGGLE_PAUSE = 'togglePause'
-        RESET = 'reset'
-        CHANGE_FRAMERATE_MULTIPLIER = 'changeFramerateMultiplier'
-        CHANGE_AUTOMATON = 'changeAutomaton'
-        TOGGLE_REWIND = 'toggleRewind'
-
-    def __init__(self, ws: WebSocket, runner: WebAutomataRunner):
-        self.ws = ws
-        self.runner = runner
-
-    async def receive_messages(self):
-        while True:
-            received_text = await self.ws.receive_text()
-            json_data = json.loads(received_text)
-
-            type: str = json_data['type']
-            data: Any = json_data.get('data', None)
-
-            if type == MessageReceiver.MessageType.TOGGLE_PAUSE:
-                self.runner.toggle_paused()
-            elif type == MessageReceiver.MessageType.RESET:
-                await self.runner.reset_automaton()
-            elif type == MessageReceiver.MessageType.CHANGE_FRAMERATE_MULTIPLIER:
-                self.runner.change_framerate_multiplier(float(data))
-            elif type == MessageReceiver.MessageType.CHANGE_AUTOMATON:
-                self.runner.change_automaton(data)
-            elif type == MessageReceiver.MessageType.TOGGLE_REWIND:
-                self.runner.toggle_rewind()
-
-class MessageSender():
-    def __init__(self, ws: WebSocket):
-        self.ws = ws
-
-    async def send_message(self, type: str, data: Any):
-        await self.ws.send_json({ 'type': type, 'data': data })
-
-    async def send_bytes(self, data: bytes):
-        await self.ws.send_bytes(data)
-
-app = FastAPI()
-
-@app.websocket('/ws')
-async def ws_endpoint(ws: WebSocket):
-    await ws.accept()
-
-    runner = WebAutomataRunner(ws)
-    message_receiver = MessageReceiver(ws, runner)
-
-    await asyncio.gather(runner.start(), message_receiver.receive_messages())
-
-app.mount('/', StaticFiles(directory='static', html=True), name='static')
