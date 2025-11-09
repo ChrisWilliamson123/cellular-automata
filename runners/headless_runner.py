@@ -11,6 +11,6 @@ def run(automaton_function: Callable[[], Automaton]):
     start = time.time()
     while True:
         automaton.iterate(0)
-        if automaton.iteration_count > 0 and automaton.iteration_count % 1000 == 0:
+        if automaton.iteration_index > 0 and automaton.total_iterations % 10 == 0:
             current = time.time()
-            print(automaton.iteration_count, f'{1 / ((current - start) / automaton.iteration_count):.0f} FPS')
+            print(automaton.iteration_index, f'{1 / ((current - start) / automaton.total_iterations):.0f} FPS')

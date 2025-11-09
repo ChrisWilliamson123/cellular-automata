@@ -75,12 +75,13 @@ class Automaton(ABC):
         ''
 
     def reset(self):
-        master_grid = np.zeros(self.grid_generators[0].screen_size, dtype=np.int8)
+        master_grid = np.zeros((self.grid_generators[0].screen_size[0], self.grid_generators[0].screen_size[1], self.grid_generators[0].screen_size[0]), dtype=np.int8)
         for g in self.grid_generators:
             grid = g.generate_grid()
             l = g.center[0] - (g.grid_size[0] // 2)
             t = g.center[1] - (g.grid_size[1] // 2)
-            master_grid[l:l+g.grid_size[0], t:t+g.grid_size[1]] = grid
+            d = g.center[0] - (g.grid_size[2] // 2)
+            master_grid[l:l+g.grid_size[0], t:t+g.grid_size[1], d:d+g.grid_size[2]] = grid
         self.state = master_grid
         self.prev_states = [None, None]
         self.iteration_index = 0
